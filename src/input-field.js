@@ -3,7 +3,7 @@ import { LitElement, html, css } from "lit-element";
 export default class InputField extends LitElement {
   static get properties() {
     return {
-      lineId: { type: Number },
+      index: { type: Number },
       maxChars: { type: Number }
     };
   }
@@ -20,6 +20,7 @@ export default class InputField extends LitElement {
   constructor() {
     super();
 
+    this.index = 1;
     this.maxChars = 10;
   }
 
@@ -33,7 +34,7 @@ export default class InputField extends LitElement {
 
   render() {
     return html`
-      <label>Línea ${this.lineId}</label>
+      <label>Línea ${this.index}</label>
       <input type="text" maxlength=${this.maxChars} @change=${this._change} />
       <span>(max. ${this.maxChars})</span>
     `;

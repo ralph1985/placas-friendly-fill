@@ -1,6 +1,24 @@
 import { LitElement, html, css } from "lit-element";
 import "./input-field";
 
+const types = [
+  {
+    id: 1,
+    lines: 3,
+    maxChars: 20
+  },
+  {
+    id: 2,
+    lines: 5,
+    maxChars: 20
+  },
+  {
+    id: 3,
+    lines: 7,
+    maxChars: 13
+  }
+];
+
 export default class DroneSheet extends LitElement {
   static get properties() {
     return {
@@ -11,26 +29,26 @@ export default class DroneSheet extends LitElement {
 
   static get styles() {
     return css`
-      .model1,
-      .model2 {
+      .model_1,
+      .model_2 {
         display: inline-block;
         border: 1px solid black;
         margin: 0.5em 1em;
       }
 
-      .model1 {
+      .model_1 {
         background-color: red;
       }
 
-      .model2 {
+      .model_2 {
         background-color: green;
       }
 
-      .model2.type2 {
+      .model_2.type_2 {
         background-color: blue;
       }
 
-      .model2.type3 {
+      .model_2.type_3 {
         background-color: yellow;
       }
     `;
@@ -42,54 +60,27 @@ export default class DroneSheet extends LitElement {
     this.model = 1;
   }
 
-  _getModel1() {
+  _getType(typeId) {
+    const type = types.find(({ id }) => id === typeId);
+
     return html`
-      <div class="model1">
-        <input-field lineId="1" maxChars="20"></input-field>
-        <input-field lineId="2" maxChars="20"></input-field>
-        <input-field lineId="3" maxChars="20"></input-field>
+      <div class="model_${this.model} type_${type.id}">
+        ${new Array(type.lines).fill().map(
+          (_, index) =>
+            html`
+              <input-field
+                index="${index + 1}"
+                maxChars="${type.maxChars}"
+              ></input-field>
+            `
+        )}
       </div>
     `;
   }
 
-  _getModel2(type) {
-    switch (type) {
-      case 2:
-        return html`
-          <div class="model2 type${type}">
-            <input-field lineId="1" maxChars="20"></input-field>
-            <input-field lineId="2" maxChars="20"></input-field>
-            <input-field lineId="3" maxChars="20"></input-field>
-            <input-field lineId="4" maxChars="20"></input-field>
-            <input-field lineId="5" maxChars="20"></input-field>
-          </div>
-        `;
-      case 3:
-        return html`
-          <div class="model2 type${type}">
-            <input-field lineId="1" maxChars="13"></input-field>
-            <input-field lineId="2" maxChars="13"></input-field>
-            <input-field lineId="3" maxChars="13"></input-field>
-            <input-field lineId="4" maxChars="13"></input-field>
-            <input-field lineId="5" maxChars="13"></input-field>
-            <input-field lineId="6" maxChars="13"></input-field>
-            <input-field lineId="7" maxChars="13"></input-field>
-          </div>
-        `;
-      default:
-        return html`
-          <div class="model2">
-            <input-field lineId="1" maxChars="20"></input-field>
-            <input-field lineId="2" maxChars="20"></input-field>
-            <input-field lineId="3" maxChars="20"></input-field>
-          </div>
-        `;
-    }
-  }
-
   render() {
     return html`
-      ${this.model === 1 ? this._getModel1() : this._getModel2(this.type)}
+      ${this._getType(this.type)}
     `;
   }
 }
