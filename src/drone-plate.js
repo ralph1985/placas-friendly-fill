@@ -33,6 +33,7 @@ const models = [
 export default class DronePlate extends LitElement {
   static get properties() {
     return {
+      id: { type: String },
       model: { type: Number }
     };
   }
@@ -69,9 +70,7 @@ export default class DronePlate extends LitElement {
   _deletePlate() {
     this.dispatchEvent(
       new CustomEvent("delete-plate", {
-        detail: {
-          plate: this
-        }
+        detail: { id: this.id }
       })
     );
   }
@@ -81,6 +80,8 @@ export default class DronePlate extends LitElement {
 
     return html`
       <h2>Plancha Modelo: ${model.id}</h2>
+      <h3>${this.id}</h3>
+      <div><button @click=${this._deletePlate}>Borrar plancha</button></div>
       ${this._getSheets(model)}
     `;
   }

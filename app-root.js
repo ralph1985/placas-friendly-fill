@@ -1,6 +1,14 @@
 import { LitElement, html, css } from "lit-element";
 import "./src/drone-plate";
 
+const uuid = () =>
+  "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+
+    return v.toString(16);
+  });
+
 class App extends LitElement {
   static get properties() {
     return {
@@ -28,11 +36,17 @@ class App extends LitElement {
   _addPlate() {
     const modelId = this.shadowRoot.getElementById("selectPlates").value;
 
-    this.plates = [...this.plates, { model: modelId }];
+    this.plates = [...this.plates, { id: uuid(), model: modelId }];
   }
 
-  _deletePlate() {
-    debugger;
+  _deletePlate({ detail } = {}) {
+    if (window.confirm("¿Deseas eliminar esta plancha?")) {
+      const index = this.plates.findIndex(({ id }) => id === detail.id);
+
+      this.plates.splice(index, 1);
+
+      this.requestUpdate();
+    }
   }
 
   render() {
@@ -41,16 +55,16 @@ class App extends LitElement {
         <option value="1">Modelo 1</option>
         <option value="2">Modelo 2</option>
       </select>
-      <button @click="${this._addPlate}">Añadir</button>
+      <button @click="${this._addPlate}">Añadir plancha</button>
 
       ${this.plates.map(
-        ({ model }) =>
-          html`
-            <drone-plate
-              model="${model}"
-              @delete-plate="${this._deletePlate}"
-            ></drone-plate>
-          `
+        ({ id, model }) => html`
+          <drone-plate
+            id="${id}"
+            model="${model}"
+            @delete-plate="${this._deletePlate}"
+          ></drone-plate>
+        `
       )}
     `;
   }
