@@ -1,0 +1,9 @@
+{
+  "name": "pqcuyz--run",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "lit-element": "2.5.0",
+    "@webcomponents/webcomponentsjs": "2.5.0"
+  }
+}
