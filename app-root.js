@@ -31,7 +31,9 @@ class App extends LitElement {
     this.plates = [...this.plates, { model: modelId }];
   }
 
-  _deletePlate() {}
+  _deletePlate() {
+    debugger;
+  }
 
   render() {
     return html`
