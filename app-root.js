@@ -16,12 +16,6 @@ class App extends LitElement {
     };
   }
 
-  constructor() {
-    super();
-
-    this.plates = [];
-  }
-
   static get styles() {
     return css`
       drone-plate {
@@ -33,10 +27,31 @@ class App extends LitElement {
     `;
   }
 
+  constructor() {
+    super();
+
+    this.plates = [];
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    try {
+      const plates = window.localStorage.getItem("plates");
+      const platesArr = JSON.parse(plates);
+
+      this.plates = Array.isArray(platesArr) ? platesArr : [];
+    } catch {
+      this.plates = [];
+    }
+  }
+
   _addPlate() {
     const modelId = this.shadowRoot.getElementById("selectPlates").value;
 
     this.plates = [...this.plates, { id: uuid(), model: modelId }];
+
+    this._save();
   }
 
   _deletePlate({ detail } = {}) {
@@ -45,8 +60,13 @@ class App extends LitElement {
 
       this.plates.splice(index, 1);
 
+      this._save();
       this.requestUpdate();
     }
+  }
+
+  _save() {
+    window.localStorage.setItem("plates", JSON.stringify(this.plates));
   }
 
   render() {
