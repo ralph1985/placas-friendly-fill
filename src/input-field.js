@@ -23,10 +23,18 @@ export default class InputField extends LitElement {
     this.maxChars = 10;
   }
 
+  _change({ currentTarget }) {
+    this.dispatchEvent(
+      new CustomEvent("input-change", {
+        detail: { value: currentTarget.value }
+      })
+    );
+  }
+
   render() {
     return html`
       <label>Línea ${this.lineId}</label>
-      <input type="text" maxlength=${this.maxChars} />
+      <input type="text" maxlength=${this.maxChars} @change=${this._change} />
       <span>(max. ${this.maxChars})</span>
     `;
   }
