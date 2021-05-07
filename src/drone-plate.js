@@ -13,8 +13,10 @@ export default class DronePlate extends LitElement {
 
   static get styles() {
     return css`
-      :host {
-        display: block;
+      h2,
+      div,
+      drone-sheet {
+        align-self: center;
       }
     `;
   }

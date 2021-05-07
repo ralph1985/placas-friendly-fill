@@ -22,19 +22,19 @@ export default class DroneSheet extends LitElement {
       }
 
       .model_1 {
-        background-color: red;
+        background-color: #f2dada;
       }
 
       .model_2 {
-        background-color: green;
+        background-color: #c7fcd3;
       }
 
       .model_2.type_2 {
-        background-color: blue;
+        background-color: #cfecfc;
       }
 
       .model_2.type_3 {
-        background-color: yellow;
+        background-color: #feffdb;
       }
     `;
   }

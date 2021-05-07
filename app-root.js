@@ -18,8 +18,22 @@ class App extends LitElement {
 
   static get styles() {
     return css`
+      .plates-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1em;
+      }
+
+      @media (max-width: 1600px) {
+        .plates-container {
+          grid-template-columns: repeat(1, 1fr);
+        }
+      }
+
       drone-plate {
         border: 2px dashed black;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         padding: 1.5em 3em;
         margin-bottom: 0.5em;
         text-align: center;
@@ -111,17 +125,19 @@ class App extends LitElement {
       </select>
       <button @click="${this._addPlate}">Añadir plancha</button>
 
-      ${this.plates.map(
-        ({ id, model, types = {} }) => html`
-          <drone-plate
-            id=${id}
-            model=${model}
-            .types=${types}
-            @change-plate=${this._changePlate}
-            @delete-plate=${this._deletePlate}
-          ></drone-plate>
-        `
-      )}
+      <div class="plates-container">
+        ${this.plates.map(
+          ({ id, model, types = {} }) => html`
+            <drone-plate
+              id=${id}
+              model=${model}
+              .types=${types}
+              @change-plate=${this._changePlate}
+              @delete-plate=${this._deletePlate}
+            ></drone-plate>
+          `
+        )}
+      </div>
     `;
   }
 }
