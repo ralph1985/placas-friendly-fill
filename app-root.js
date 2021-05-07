@@ -54,40 +54,36 @@ class App extends LitElement {
     this._save();
   }
 
-  _changePlate({ detail } = {}) {
-    const plate = this.plates.find(plate => plate.id === detail.id);
+  _changePlate({
+    detail: { sheet: { type, index, line } = {}, id: plateId } = {}
+  } = {}) {
+    const sheetType = type;
+    const sheetIndex = index;
+    const lineIndex = line.index;
+    const lineValue = line.value;
+    const selectedPlate = this.plates.find(plate => plate.id === plateId);
 
-    if (!plate.types) {
-      plate.types = {};
+    if (!selectedPlate.types) {
+      selectedPlate.types = {};
     }
 
-    let type = plate.types[detail.sheet.type];
+    const selectedType =
+      selectedPlate.types[sheetType] ?? (selectedPlate.types[sheetType] = {});
 
-    if (!type) {
-      type = plate.types[detail.sheet.type] = {};
+    if (!selectedType.sheets) {
+      selectedType.sheets = [];
     }
 
-    if (!type.sheets) {
-      type.sheets = [];
+    const selectedSheet =
+      selectedType.sheets[sheetIndex] ?? (selectedType.sheets[sheetIndex] = {});
+
+    if (!selectedSheet.lines) {
+      selectedSheet.lines = [];
     }
 
-    let sheet = type.sheets[detail.sheet.index];
-
-    if (!sheet) {
-      sheet = type.sheets[detail.sheet.index] = {};
-    }
-
-    if (!sheet.lines) {
-      sheet.lines = [];
-    }
-
-    let line = sheet.lines[detail.sheet.line.index];
-
-    if (!line) {
-      line = sheet.lines[detail.sheet.line.index] = {};
-    }
-
-    line.value = detail.sheet.line.value;
+    (
+      selectedSheet.lines[lineIndex] ?? (selectedSheet.lines[lineIndex] = {})
+    ).value = lineValue;
 
     this._save();
   }

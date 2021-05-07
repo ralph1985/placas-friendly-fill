@@ -1,34 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
+import { models } from './../config';
 import './drone-sheet';
-
-const models = [
-  {
-    id: 1,
-    config: [
-      {
-        type: 1,
-        droneSheets: 10
-      }
-    ]
-  },
-  {
-    id: 2,
-    config: [
-      {
-        type: 1,
-        droneSheets: 2
-      },
-      {
-        type: 2,
-        droneSheets: 2
-      },
-      {
-        type: 3,
-        droneSheets: 2
-      }
-    ]
-  }
-];
 
 export default class DronePlate extends LitElement {
   static get properties() {
@@ -99,7 +71,6 @@ export default class DronePlate extends LitElement {
 
     return html`
       <h2>Plancha Modelo: ${model.id}</h2>
-      <h3>${this.id}</h3>
       <div><button @click=${this._deletePlate}>Borrar plancha</button></div>
       ${this._getSheets(model)}
     `;

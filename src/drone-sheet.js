@@ -1,23 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
+import { types } from './../config';
 import './input-field';
-
-const types = [
-  {
-    id: 1,
-    lines: 3,
-    maxChars: 20
-  },
-  {
-    id: 2,
-    lines: 5,
-    maxChars: 20
-  },
-  {
-    id: 3,
-    lines: 7,
-    maxChars: 13
-  }
-];
 
 export default class DroneSheet extends LitElement {
   static get properties() {
