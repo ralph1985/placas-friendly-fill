@@ -1,5 +1,5 @@
-import { LitElement, html, css } from "lit-element";
-import "./input-field";
+import { LitElement, html, css } from 'lit-element';
+import './input-field';
 
 const types = [
   {
@@ -23,7 +23,9 @@ export default class DroneSheet extends LitElement {
   static get properties() {
     return {
       model: { type: Number },
-      type: { type: Number }
+      type: { type: Number },
+      index: { type: Number },
+      lines: { type: Array }
     };
   }
 
@@ -58,6 +60,19 @@ export default class DroneSheet extends LitElement {
     super();
 
     this.model = 1;
+    this.lines = [];
+  }
+
+  _fieldChange({ detail: line } = {}) {
+    this.dispatchEvent(
+      new CustomEvent('drone-sheet-change', {
+        detail: {
+          type: this.type,
+          index: this.index,
+          line
+        }
+      })
+    );
   }
 
   _getType(typeId) {
@@ -69,8 +84,10 @@ export default class DroneSheet extends LitElement {
           (_, index) =>
             html`
               <input-field
-                index="${index + 1}"
-                maxChars="${type.maxChars}"
+                index=${index}
+                maxChars=${type.maxChars}
+                value=${this.lines[index]?.value ?? ''}
+                @input-field-change=${this._fieldChange}
               ></input-field>
             `
         )}
@@ -85,4 +102,4 @@ export default class DroneSheet extends LitElement {
   }
 }
 
-customElements.define("drone-sheet", DroneSheet);
+customElements.define('drone-sheet', DroneSheet);

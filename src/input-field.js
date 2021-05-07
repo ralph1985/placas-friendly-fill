@@ -1,10 +1,11 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html, css } from 'lit-element';
 
 export default class InputField extends LitElement {
   static get properties() {
     return {
       index: { type: Number },
-      maxChars: { type: Number }
+      maxChars: { type: Number },
+      value: { type: String }
     };
   }
 
@@ -20,14 +21,18 @@ export default class InputField extends LitElement {
   constructor() {
     super();
 
-    this.index = 1;
+    this.index = 0;
     this.maxChars = 10;
+    this.value = '';
   }
 
   _change({ currentTarget }) {
     this.dispatchEvent(
-      new CustomEvent("input-change", {
-        detail: { value: currentTarget.value }
+      new CustomEvent('input-field-change', {
+        detail: {
+          index: this.index,
+          value: currentTarget.value
+        }
       })
     );
   }
@@ -35,10 +40,15 @@ export default class InputField extends LitElement {
   render() {
     return html`
       <label>Línea ${this.index}</label>
-      <input type="text" maxlength=${this.maxChars} @change=${this._change} />
+      <input
+        value="${this.value}"
+        type="text"
+        maxlength="${this.maxChars}"
+        @change=${this._change}
+      />
       <span>(max. ${this.maxChars})</span>
     `;
   }
 }
 
-customElements.define("input-field", InputField);
+customElements.define('input-field', InputField);

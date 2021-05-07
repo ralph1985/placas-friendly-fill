@@ -1,5 +1,5 @@
-import { LitElement, html, css } from "lit-element";
-import "./drone-sheet";
+import { LitElement, html, css } from 'lit-element';
+import './drone-sheet';
 
 const models = [
   {
@@ -34,7 +34,8 @@ export default class DronePlate extends LitElement {
   static get properties() {
     return {
       id: { type: String },
-      model: { type: Number }
+      model: { type: Number },
+      types: { type: Object }
     };
   }
 
@@ -50,6 +51,26 @@ export default class DronePlate extends LitElement {
     super();
 
     this.model = 1;
+    this.types = {};
+  }
+
+  _deletePlate() {
+    this.dispatchEvent(
+      new CustomEvent('delete-plate', {
+        detail: { id: this.id }
+      })
+    );
+  }
+
+  _sheetChange({ detail: sheet } = {}) {
+    this.dispatchEvent(
+      new CustomEvent('change-plate', {
+        detail: {
+          id: this.id,
+          sheet
+        }
+      })
+    );
   }
 
   _getModel(modelId) {
@@ -59,19 +80,17 @@ export default class DronePlate extends LitElement {
   _getSheets(model) {
     return model.config.map(({ type, droneSheets }) =>
       new Array(droneSheets).fill().map(
-        () =>
+        (_, index) =>
           html`
-            <drone-sheet model=${this.model} type=${type} /></drone-sheet>
+            <drone-sheet
+              model=${this.model}
+              type=${type}
+              index=${index}
+              .lines=${this.types[type]?.sheets[index]?.lines ?? []}
+              @drone-sheet-change=${this._sheetChange}
+            ></drone-sheet>
           `
       )
-    );
-  }
-
-  _deletePlate() {
-    this.dispatchEvent(
-      new CustomEvent("delete-plate", {
-        detail: { id: this.id }
-      })
     );
   }
 
@@ -87,4 +106,4 @@ export default class DronePlate extends LitElement {
   }
 }
 
-customElements.define("drone-plate", DronePlate);
+customElements.define('drone-plate', DronePlate);
