@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { models } from './../config';
+import '@material/mwc-button';
 import './drone-sheet';
 
 export default class DronePlate extends LitElement {
@@ -71,11 +72,16 @@ export default class DronePlate extends LitElement {
   render() {
     const model = this._getModel(this.model);
 
-    return html`
-      <h2>Plancha Modelo: ${model.id}</h2>
-      <div><button @click=${this._deletePlate}>Borrar plancha</button></div>
-      ${this._getSheets(model)}
-    `;
+    return (
+      model &&
+      html`
+        <h2>Plancha Modelo: ${model.id}</h2>
+        <div>
+          <mwc-button @click=${this._deletePlate}>Borrar plancha</mwc-button>
+        </div>
+        ${this._getSheets(model)}
+      `
+    );
   }
 }
 

@@ -1,4 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
+import '@material/mwc-button';
+import '@material/mwc-select';
+import '@material/mwc-list/mwc-list-item';
 import './src/drone-plate';
 
 const uuid = () =>
@@ -63,9 +66,13 @@ class App extends LitElement {
   _addPlate() {
     const modelId = this.shadowRoot.getElementById('selectPlates').value;
 
+    if (!modelId || modelId === '') {
+      return;
+    }
+
     this.plates = [...this.plates, { id: uuid(), model: modelId }];
 
-    this._save();
+    return this._save();
   }
 
   _changePlate({
@@ -119,11 +126,12 @@ class App extends LitElement {
 
   render() {
     return html`
-      <select id="selectPlates">
-        <option value="1">Modelo 1</option>
-        <option value="2">Modelo 2</option>
-      </select>
-      <button @click="${this._addPlate}">Añadir plancha</button>
+      <mwc-select id="selectPlates" label="Selecciona un modelo">
+        <mwc-list-item value="1">Modelo 1</mwc-list-item>
+        <mwc-list-item value="2">Modelo 2</mwc-list-item>
+      </mwc-select>
+
+      <mwc-button @click=${this._addPlate}>Añadir plancha</mwc-button>
 
       <div class="plates-container">
         ${this.plates.map(

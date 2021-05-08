@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
+import '@material/mwc-textfield';
 
 export default class InputField extends LitElement {
   static get properties() {
@@ -26,7 +27,7 @@ export default class InputField extends LitElement {
     this.value = '';
   }
 
-  _change({ currentTarget }) {
+  _change({ currentTarget } = {}) {
     this.dispatchEvent(
       new CustomEvent('input-field-change', {
         detail: {
@@ -39,14 +40,13 @@ export default class InputField extends LitElement {
 
   render() {
     return html`
-      <label>Línea ${this.index}</label>
-      <input
+      <mwc-textfield
+        label="Línea ${this.index + 1}"
         value="${this.value}"
-        type="text"
-        maxlength="${this.maxChars}"
+        max="${this.maxChars}"
+        helper="(max. ${this.maxChars})"
         @change=${this._change}
-      />
-      <span>(max. ${this.maxChars})</span>
+      ></mwc-textfield>
     `;
   }
 }
