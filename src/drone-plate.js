@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { models } from './../config';
 import '@material/mwc-button';
+import '@material/mwc-fab';
 import './drone-sheet';
 
 export default class DronePlate extends LitElement {
@@ -18,6 +19,12 @@ export default class DronePlate extends LitElement {
       div,
       drone-sheet {
         align-self: center;
+      }
+
+      #deleteButton {
+        position: fixed;
+        right: 1em;
+        bottom: 1em;
       }
     `;
   }
@@ -75,10 +82,12 @@ export default class DronePlate extends LitElement {
     return (
       model &&
       html`
-        <div>
-          <mwc-button @click=${this._deletePlate}>Borrar plancha</mwc-button>
-        </div>
         ${this._getSheets(model)}
+        <mwc-fab
+          id="deleteButton"
+          icon="delete"
+          @click=${this._deletePlate}
+        ></mwc-fab>
       `
     );
   }
