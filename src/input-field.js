@@ -43,7 +43,7 @@ export default class InputField extends LitElement {
       <mwc-textfield
         label="Línea ${this.index + 1}"
         value="${this.value}"
-        max="${this.maxChars}"
+        maxLength=${this.maxChars}
         helper="(max. ${this.maxChars})"
         @change=${this._change}
       ></mwc-textfield>
