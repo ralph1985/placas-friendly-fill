@@ -3,9 +3,10 @@ import { models } from './config';
 import '@material/mwc-button';
 import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item';
-import '@material/mwc-tab-bar';
-import '@material/mwc-tab';
 import '@material/mwc-dialog';
+import '@material/mwc-top-app-bar-fixed';
+import '@material/mwc-icon-button';
+import '@material/mwc-menu';
 import './src/drone-plate';
 
 const uuid = () =>
@@ -33,7 +34,7 @@ class App extends LitElement {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 24em;
+        height: 10em;
       }
 
       #selectPlates {
@@ -61,8 +62,13 @@ class App extends LitElement {
     }
   }
 
-  _changeTab({ currentTarget: { id } } = {}) {
-    this._selectedPlate = this.plates.find(plate => plate.id === id);
+  _openMenu() {
+    this.shadowRoot.getElementById('menu').show();
+  }
+
+  _changeSelectedPlate({ currentTarget: { id } } = {}) {
+    const index = this.plates.findIndex(plate => plate.id === id);
+    this._selectedPlate = { ...this.plates[index], index };
     this.requestUpdate();
   }
 
@@ -74,6 +80,9 @@ class App extends LitElement {
     }
 
     this.plates = [...this.plates, { id: uuid(), model: modelId }];
+
+    const index = this.plates.length - 1;
+    this._selectedPlate = { ...this.plates[index], index };
 
     return this._save();
   }
@@ -140,23 +149,6 @@ class App extends LitElement {
     window.localStorage.setItem('plates', JSON.stringify(this.plates));
   }
 
-  _getTabBar() {
-    return html`
-      <mwc-tab-bar>
-        <mwc-tab label="Añadir planchas" @click=${this._changeTab}></mwc-tab>
-        ${this.plates.map(
-          ({ id, model }, index) => html`
-            <mwc-tab
-              label="Plancha ${index + 1} (modelo ${model})"
-              id="${id}"
-              @click=${this._changeTab}
-            ></mwc-tab>
-          `
-        )}
-      </mwc-tab-bar>
-    `;
-  }
-
   _getDeleteDialog() {
     return html`
       <mwc-dialog
@@ -175,10 +167,49 @@ class App extends LitElement {
     `;
   }
 
+  _getMenu() {
+    return html`
+      <mwc-menu id="menu">
+        <mwc-list-item @click=${this._changeSelectedPlate}>
+          Añadir planchas
+        </mwc-list-item>
+        ${this.plates.map(
+          ({ id, model }, index) =>
+            html`
+              <mwc-list-item id="${id}" @click=${this._changeSelectedPlate}>
+                Plancha ${index + 1} (Modelo ${model})
+              </mwc-list-item>
+            `
+        )}
+      </mwc-menu>
+    `;
+  }
+
+  _getTopBar() {
+    const title =
+      this._selectedPlate?.index >= 0
+        ? `Plancha ${this._selectedPlate.index + 1} (Modelo ${
+            this._selectedPlate?.model
+          })`
+        : 'Añadir planchas';
+
+    return html`
+      <mwc-top-app-bar-fixed centerTitle>
+        <mwc-icon-button
+          icon="menu"
+          slot="navigationIcon"
+          @click=${this._openMenu}
+        ></mwc-icon-button>
+        <div slot="title">${title}</div>
+        <div><!-- content --></div>
+      </mwc-top-app-bar-fixed>
+    `;
+  }
+
   render() {
     return html`
-      ${this._getTabBar()}
-      ${this._selectedPlate
+      ${this._getTopBar()}${this._getMenu()}
+      ${this._selectedPlate?.index >= 0
         ? html`
             <drone-plate
               id=${this._selectedPlate.id}
