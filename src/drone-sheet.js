@@ -16,7 +16,6 @@ export default class DroneSheet extends LitElement {
     return css`
       .model_1,
       .model_2 {
-        display: inline-block;
       }
 
       .model_1 {
@@ -60,6 +59,7 @@ export default class DroneSheet extends LitElement {
     const type = types.find(({ id }) => id === typeId);
 
     return html`
+      <h3>Placa ${this.index + 1}</h3>
       <div class="model_${this.model} type_${type.id}">
         ${new Array(type.lines).fill().map(
           (_, index) =>

@@ -13,8 +13,10 @@ export default class InputField extends LitElement {
   static get styles() {
     return css`
       :host {
-        display: block;
-        margin: 0.2em;
+      }
+
+      mwc-textfield {
+        width: 100%;
       }
     `;
   }

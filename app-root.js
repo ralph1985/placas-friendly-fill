@@ -27,6 +27,26 @@ class App extends LitElement {
   static get styles() {
     return css`
       drone-plate {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+      }
+
+      @media (min-width: 700px) {
+        drone-plate {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1200px) {
+        drone-plate {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (min-width: 1600px) {
+        drone-plate {
+          grid-template-columns: repeat(4, 1fr);
+        }
       }
 
       .add-plates-wrapper {

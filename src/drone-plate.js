@@ -18,7 +18,7 @@ export default class DronePlate extends LitElement {
       h2,
       div,
       drone-sheet {
-        align-self: center;
+        border: 1px solid black;
       }
 
       #deleteButton {
