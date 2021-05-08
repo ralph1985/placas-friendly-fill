@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
+import { models } from './config';
 import '@material/mwc-button';
 import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item';
@@ -24,6 +25,14 @@ class App extends LitElement {
   static get styles() {
     return css`
       drone-plate {
+      }
+
+      .add-plates-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 24em;
       }
     `;
   }
@@ -119,14 +128,8 @@ class App extends LitElement {
 
   render() {
     return html`
-      <mwc-select id="selectPlates" label="Selecciona un modelo">
-        <mwc-list-item value="1">Modelo 1</mwc-list-item>
-        <mwc-list-item value="2">Modelo 2</mwc-list-item>
-      </mwc-select>
-
-      <mwc-button @click=${this._addPlate}>Añadir plancha</mwc-button>
-
       <mwc-tab-bar>
+        <mwc-tab label="Añadir planchas" @click=${this._changeTab}></mwc-tab>
         ${this.plates.map(
           ({ id, model }, index) => html`
             <mwc-tab
@@ -138,16 +141,29 @@ class App extends LitElement {
         )}
       </mwc-tab-bar>
 
-      ${this._selectedPlate &&
-        html`
-          <drone-plate
-            id=${this._selectedPlate.id}
-            model=${this._selectedPlate.model}
-            .types=${this._selectedPlate.types ?? {}}
-            @change-plate=${this._changePlate}
-            @delete-plate=${this._deletePlate}
-          ></drone-plate>
-        `}
+      ${this._selectedPlate
+        ? html`
+            <drone-plate
+              id=${this._selectedPlate.id}
+              model=${this._selectedPlate.model}
+              .types=${this._selectedPlate.types ?? {}}
+              @change-plate=${this._changePlate}
+              @delete-plate=${this._deletePlate}
+            ></drone-plate>
+          `
+        : html`
+            <div class="add-plates-wrapper">
+              <mwc-select id="selectPlates" label="Selecciona un modelo">
+                ${models.map(
+                  ({ id }) =>
+                    html`
+                      <mwc-list-item value="${id}">Modelo ${id}</mwc-list-item>
+                    `
+                )}
+              </mwc-select>
+              <mwc-button @click=${this._addPlate}>Añadir plancha</mwc-button>
+            </div>
+          `}
     `;
   }
 }
