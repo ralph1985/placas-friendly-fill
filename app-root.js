@@ -35,6 +35,10 @@ class App extends LitElement {
         justify-content: center;
         height: 24em;
       }
+
+      #selectPlates {
+        width: 70%;
+      }
     `;
   }
 
@@ -136,7 +140,7 @@ class App extends LitElement {
     window.localStorage.setItem('plates', JSON.stringify(this.plates));
   }
 
-  render() {
+  _getTabBar() {
     return html`
       <mwc-tab-bar>
         <mwc-tab label="Añadir planchas" @click=${this._changeTab}></mwc-tab>
@@ -150,7 +154,30 @@ class App extends LitElement {
           `
         )}
       </mwc-tab-bar>
+    `;
+  }
 
+  _getDeleteDialog() {
+    return html`
+      <mwc-dialog
+        id="deleteDialog"
+        scrimClickAction=""
+        @closed=${this._deletePlate}
+      >
+        <div>¿Eliminar esta plancha?</div>
+        <mwc-button slot="primaryAction" dialogAction="ok">
+          Aceptar
+        </mwc-button>
+        <mwc-button slot="secondaryAction" dialogAction="close">
+          Cancelar
+        </mwc-button>
+      </mwc-dialog>
+    `;
+  }
+
+  render() {
+    return html`
+      ${this._getTabBar()}
       ${this._selectedPlate
         ? html`
             <drone-plate
@@ -174,20 +201,7 @@ class App extends LitElement {
               <mwc-button @click=${this._addPlate}>Añadir plancha</mwc-button>
             </div>
           `}
-
-      <mwc-dialog
-        id="deleteDialog"
-        scrimClickAction=""
-        @closed=${this._deletePlate}
-      >
-        <div>¿Eliminar esta plancha?</div>
-        <mwc-button slot="primaryAction" dialogAction="ok">
-          Aceptar
-        </mwc-button>
-        <mwc-button slot="secondaryAction" dialogAction="close">
-          Cancelar
-        </mwc-button>
-      </mwc-dialog>
+      ${this._getDeleteDialog()}
     `;
   }
 }
