@@ -5,6 +5,7 @@ import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-tab-bar';
 import '@material/mwc-tab';
+import '@material/mwc-dialog';
 import './src/drone-plate';
 
 const uuid = () =>
@@ -41,7 +42,6 @@ class App extends LitElement {
     super();
 
     this.plates = [];
-    this.selectedTabIndex = 0;
   }
 
   connectedCallback() {
@@ -55,8 +55,6 @@ class App extends LitElement {
     } catch {
       this.plates = [];
     }
-
-    this._selectedPlate = this.plates[0];
   }
 
   _changeTab({ currentTarget: { id } } = {}) {
@@ -110,9 +108,21 @@ class App extends LitElement {
     this._save();
   }
 
-  _deletePlate({ detail } = {}) {
-    if (window.confirm('¿Deseas eliminar esta plancha?')) {
-      const index = this.plates.findIndex(({ id }) => id === detail.id);
+  _openDialogForDeletePlate({ detail: { id } } = {}) {
+    const dialog = this.shadowRoot.getElementById('deleteDialog');
+
+    dialog.setAttribute('data-id', id);
+    dialog.show();
+  }
+
+  _deletePlate({
+    detail: { action },
+    currentTarget: {
+      dataset: { id: selectedId }
+    }
+  } = {}) {
+    if (action === 'ok') {
+      const index = this.plates.findIndex(({ id }) => id === selectedId);
 
       this.plates.splice(index, 1);
 
@@ -148,7 +158,7 @@ class App extends LitElement {
               model=${this._selectedPlate.model}
               .types=${this._selectedPlate.types ?? {}}
               @change-plate=${this._changePlate}
-              @delete-plate=${this._deletePlate}
+              @delete-plate=${this._openDialogForDeletePlate}
             ></drone-plate>
           `
         : html`
@@ -164,6 +174,20 @@ class App extends LitElement {
               <mwc-button @click=${this._addPlate}>Añadir plancha</mwc-button>
             </div>
           `}
+
+      <mwc-dialog
+        id="deleteDialog"
+        scrimClickAction=""
+        @closed=${this._deletePlate}
+      >
+        <div>¿Eliminar esta plancha?</div>
+        <mwc-button slot="primaryAction" dialogAction="ok">
+          Aceptar
+        </mwc-button>
+        <mwc-button slot="secondaryAction" dialogAction="close">
+          Cancelar
+        </mwc-button>
+      </mwc-dialog>
     `;
   }
 }
