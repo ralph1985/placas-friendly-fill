@@ -17,8 +17,6 @@ export default class DroneSheet extends LitElement {
       .model_1,
       .model_2 {
         display: inline-block;
-        border: 1px solid black;
-        margin: 0.5em 1em;
       }
 
       .model_1 {

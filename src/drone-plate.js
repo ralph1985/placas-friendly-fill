@@ -75,7 +75,6 @@ export default class DronePlate extends LitElement {
     return (
       model &&
       html`
-        <h2>Plancha Modelo: ${model.id}</h2>
         <div>
           <mwc-button @click=${this._deletePlate}>Borrar plancha</mwc-button>
         </div>

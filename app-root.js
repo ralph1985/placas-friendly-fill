@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit-element';
 import '@material/mwc-button';
 import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-tab-bar';
+import '@material/mwc-tab';
 import './src/drone-plate';
 
 const uuid = () =>
@@ -21,25 +23,7 @@ class App extends LitElement {
 
   static get styles() {
     return css`
-      .plates-container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1em;
-      }
-
-      @media (max-width: 1600px) {
-        .plates-container {
-          grid-template-columns: repeat(1, 1fr);
-        }
-      }
-
       drone-plate {
-        border: 2px dashed black;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        padding: 1.5em 3em;
-        margin-bottom: 0.5em;
-        text-align: center;
       }
     `;
   }
@@ -48,6 +32,7 @@ class App extends LitElement {
     super();
 
     this.plates = [];
+    this.selectedTabIndex = 0;
   }
 
   connectedCallback() {
@@ -61,6 +46,13 @@ class App extends LitElement {
     } catch {
       this.plates = [];
     }
+
+    this._selectedPlate = this.plates[0];
+  }
+
+  _changeTab({ currentTarget: { id } } = {}) {
+    this._selectedPlate = this.plates.find(plate => plate.id === id);
+    this.requestUpdate();
   }
 
   _addPlate() {
@@ -116,6 +108,7 @@ class App extends LitElement {
       this.plates.splice(index, 1);
 
       this._save();
+      this._selectedPlate = null;
       this.requestUpdate();
     }
   }
@@ -133,19 +126,28 @@ class App extends LitElement {
 
       <mwc-button @click=${this._addPlate}>Añadir plancha</mwc-button>
 
-      <div class="plates-container">
+      <mwc-tab-bar>
         ${this.plates.map(
-          ({ id, model, types = {} }) => html`
-            <drone-plate
-              id=${id}
-              model=${model}
-              .types=${types}
-              @change-plate=${this._changePlate}
-              @delete-plate=${this._deletePlate}
-            ></drone-plate>
+          ({ id, model }, index) => html`
+            <mwc-tab
+              label="Plancha ${index + 1} (modelo ${model})"
+              id="${id}"
+              @click=${this._changeTab}
+            ></mwc-tab>
           `
         )}
-      </div>
+      </mwc-tab-bar>
+
+      ${this._selectedPlate &&
+        html`
+          <drone-plate
+            id=${this._selectedPlate.id}
+            model=${this._selectedPlate.model}
+            .types=${this._selectedPlate.types ?? {}}
+            @change-plate=${this._changePlate}
+            @delete-plate=${this._deletePlate}
+          ></drone-plate>
+        `}
     `;
   }
 }
